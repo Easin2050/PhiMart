@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.db.models import Count
 from rest_framework import status
 from product.models import Product,Category
 from product.serializers import ProductSerializer,CategorySerializer
@@ -22,8 +23,10 @@ def view_specific_products(request,id):
 
     
 @api_view()
-def view_categories(response):
-    return Response({"message":"Cateogory View"})
+def view_categories(request):
+    categories=Category.objects.annotate(product_count=Count('products')).all()
+    serializer=CategorySerializer(categories,many=True)
+    return Response(serializer.data)
 
 @api_view()
 def view_specific_category(request,pk):

@@ -7,7 +7,10 @@ class CategorySerializer(serializers.ModelSerializer):
         model=Category
         fields=['id', 'name', 'description','product_count']
     
-    product_count=serializers.IntegerField()
+    product_count=serializers.SerializerMethodField(method_name='product_count_method')
+
+    def product_count_method(self,category):
+        return category.products.count()
     
 '''class ProductSerializer(serializers.Serializer):
     id=serializers.IntegerField()
@@ -36,10 +39,10 @@ class ProductSerializer(serializers.ModelSerializer):
         # fields='__all__' # Using this we can show all the fields of a model
         fields=['id','name','description','price','stock','category','price_with_tax']
 
-    category=serializers.HyperlinkedRelatedField(
+    '''category=serializers.HyperlinkedRelatedField(
         queryset=Category.objects.all(),
         view_name='view-specific-category',
-    )
+    )'''
 
     price_with_tax=serializers.SerializerMethodField(method_name='calculate_tax')
 

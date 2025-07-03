@@ -41,13 +41,14 @@ def view_categories(request):
         return Response(serializer.data)
     
     if request.method=='POST':
-         serializer=CategorySerializer(data=request.data)
-         if serializer.is_valid():
-              print(serializer.validated_data)
-              serializer.save()
-              return Response(serializer.data,status=status.HTTP_201_CREATED)
-         else:
-              return Response(serializer.errors,status=status.HTTP_404_NOT_FOUND)
+        serializer=CategorySerializer(data=request.data)
+        #  if serializer.is_valid():
+        serializer.is_valid(raise_exception=True)       
+        print(serializer.validated_data)
+        serializer.save()
+        return Response(serializer.data,status=status.HTTP_201_CREATED)
+        #  else:
+        #       return Response(serializer.errors,status=status.HTTP_404_NOT_FOUND)
 
 @api_view()
 def view_specific_category(request,pk):

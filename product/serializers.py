@@ -49,3 +49,13 @@ class ProductSerializer(serializers.ModelSerializer):
     def calculate_tax(self,product):
         return round(product.price * Decimal(1.1),2)
 
+    def validate_price(self,price):
+        if price<0:
+            raise serializers.ValidationError("Price cannot be negative")
+        return price
+    
+    '''def validate(self, attrs):
+        if attrs['password1'] != attrs['password2']:
+            raise serializers.ValidationError("Password mismatch")
+        return attrs
+'''

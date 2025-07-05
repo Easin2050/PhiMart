@@ -25,13 +25,26 @@ def view_products(request):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view()
-def view_specific_products(request,id):
-        product=get_object_or_404(Product,pk=id)
-        # product_dict={"id": product.id,"name":product.name,"unit_price":product.price}
-        serializer=ProductSerializer(product)
+@api_view(['GET', 'PUT', 'DELETE'])
+def view_specific_products(request, id):
+    if request.method == 'GET':
+        product = get_object_or_404(Product, pk=id)
+        serializer = ProductSerializer(product)
         return Response(serializer.data)
 
+    if request.method == 'PUT':
+        product = get_object_or_404(Product, pk=id)
+        serializer = ProductSerializer(product, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    if request.method == 'DELETE':
+        product = get_object_or_404(Product, pk=id)
+        copy_of_product=product
+        product.delete()
+        serializer=ProductSerializer(copy_of_product)
+        return Response(serializer.data,status=status.HTTP_204_NO_CONTENT)
     
 @api_view(['GET','POST'])
 def view_categories(request):
@@ -44,7 +57,6 @@ def view_categories(request):
         serializer=CategorySerializer(data=request.data)
         #  if serializer.is_valid():
         serializer.is_valid(raise_exception=True)       
-        print(serializer.validated_data)
         serializer.save()
         return Response(serializer.data,status=status.HTTP_201_CREATED)
         #  else:
@@ -55,3 +67,5 @@ def view_specific_category(request,pk):
         category=get_object_or_404(Category,pk=pk)
         serializer=CategorySerializer(category)
         return Response(serializer.data)
+
+

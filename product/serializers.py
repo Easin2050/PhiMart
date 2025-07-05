@@ -59,3 +59,11 @@ class ProductSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Password mismatch")
         return attrs
 '''
+    '''def create(self,validated_data):
+        product=Product(**validated_data)
+        product.other=1 
+        product.save()
+        return product
+        In create methid is used to create a new instance of the model before saving the data to the database'''
+
+    

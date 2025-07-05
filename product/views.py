@@ -112,19 +112,19 @@ def view_specific_category(request,pk):
 
 class ViewSpecificCategory(APIView):
     def get(self,request,id):
-        category=get_object_or_404(Category,pk=id)
+        category=get_object_or_404(Category.objects.annotate(product_count=Count('products')),pk=id)
         serializer=CategorySerializer(category)
         return Response(serializer.data)
     
     def put(self,request,id):
-        category=get_object_or_404(Category,pk=id)
+        category=get_object_or_404(Category.objects.annotate(product_count=Count('products')),pk=id)
         serializer=CategorySerializer(category,data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
 
     def delete(self,request,id):
-        category=get_object_or_404(Category,pk=id)
+        category=get_object_or_404(Category.objects.annotate(product_count=Count('products')),pk=id)
         copy_of_category=category
         category.delete()
         serializer=CategorySerializer(copy_of_category)

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from decimal import Decimal
-from product.models import Product, Category
+from product.models import Product, Category,Review
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -63,4 +63,12 @@ class ProductSerializer(serializers.ModelSerializer):
         return product
         In create methid is used to create a new instance of the model before saving the data to the database'''
 
-    
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Review
+        fields=['id','name','description']
+
+    def create(self,validated_data):
+        product_id=self.context.get('product_id')
+        return Review.objects.create(product_id=product_id,**validated_data)
+

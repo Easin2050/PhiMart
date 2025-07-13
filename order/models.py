@@ -3,6 +3,7 @@ from django.core.validators import MinValueValidator
 from users.models import User
 from product.models import Product
 from uuid import uuid4
+from django.core.validators import MinValueValidator
 # Create your models here.
 
 
